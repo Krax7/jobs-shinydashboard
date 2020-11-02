@@ -4,6 +4,15 @@ rm(list=ls())
 library(shinydashboard)
 library(shiny)
 
+# Create fake tasks
+text = c('Las estadísiticas dicen que no le has dato de comer al perro. Dale.',
+         'Contruye un dashboarde bien bonito de empleos.',
+         'Tómate tus medicinas para las muelas.')
+value = c(0,
+          15,
+          100)
+task_data = data.frame(text,value)
+
 starwars_url = 'http://s3.amazonaws.com/assets.datacamp.com/production/course_6225/datasets/starwars.csv'
 
 header <- dashboardHeader(
@@ -27,13 +36,7 @@ header <- dashboardHeader(
       text = 'The International Space Station is overhead!'
     )
   ),
-  dropdownMenu(
-    type = 'tasks',
-    taskItem(
-      text = 'Mission Learn Shiny Dashboard',
-      value = 10
-    )
-  )
+  dropdownMenuOutput("task_menu")
 )
 
 sidebar <- dashboardSidebar(
@@ -57,7 +60,8 @@ sidebar <- dashboardSidebar(
     inputId = "name",
     label = "Name",
     choices = c("Patricia","Carlos","Jocelyn","Omar")
-  )
+  ),
+  actionButton("click", "Update click box")
 )
 
 body <- dashboardBody(
@@ -76,7 +80,8 @@ body <- dashboardBody(
   textOutput(
     outputId = "name",
   ),
-  tableOutput("table")
+  tableOutput("table"),
+  valueBoxOutput("click_box")
 )
 
 ui <- dashboardPage(header = header,
@@ -100,6 +105,21 @@ server <- function(input, output, session) {
   
   output$table <- renderTable({
     reactive_starwars_data()
+  })
+  
+  output$task_menu <- renderMenu({
+    tasks <- apply(task_data, 1, function(row) {
+      taskItem(text = row[["text"]],
+               value = row[["value"]])
+    })
+    dropdownMenu(type = "tasks", .list = tasks)
+  })
+  
+  output$click_box <- renderValueBox({
+    valueBox(
+      value = input$click,
+      subtitle = "Click Box"
+    )
   })
 }
 
