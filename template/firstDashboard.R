@@ -81,8 +81,42 @@ body <- dashboardBody(
     outputId = "name",
   ),
   tableOutput("table"),
-  valueBoxOutput("click_box")
-)
+  valueBoxOutput("click_box"),
+  # Row 1
+  fluidRow(
+    box(
+      width = 12,
+      title = "Regular Box, Row 1",
+      "Star Wars"
+    )
+  ),
+  # Row 2
+  fluidRow(
+    box(
+      width = 12,
+      title = "Regular box, Row 2",
+      "Nothing but Star Wars"
+    )
+  ),
+  # Column 1
+  fluidRow(
+      column(width = 6,
+       infoBox(
+         width = NULL,
+         title = "Regular Box, Column 1",
+         subtitle = "Gimme those Star Wars"
+       )
+      ),
+      # Column 2
+      column(width = 6,
+       infoBox(
+         width = NULL,
+         title = "Regular Box, Column 2",
+         subtitle = "Don't let them end"
+       )
+      )
+    )
+  )
 
 ui <- dashboardPage(header = header,
                     sidebar = sidebar,
